@@ -21,10 +21,19 @@ function Landing() {
       {/* Hero */}
       <section className="px-6 pt-20 pb-24 md:pt-32 md:pb-32">
         <div className="mx-auto max-w-5xl">
-          <span className="inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1 text-xs font-medium text-accent-foreground">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            제 8회 교육 공공데이터 AI 활용 대회 · TEAM 모나드
-          </span>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1 text-xs font-medium text-accent-foreground">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              제 8회 교육 공공데이터 AI 활용 대회 · TEAM 모나드
+            </span>
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-bold text-primary shadow-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
+              </span>
+              100% 실제 학생 사용 데이터 연동
+            </span>
+          </div>
           <h1 className="mt-6 text-5xl font-bold leading-[1.05] tracking-tight md:text-7xl">
             학교마다 필요한<br />
             <span className="text-primary">언어 교육은 다릅니다.</span>

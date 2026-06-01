@@ -49,10 +49,32 @@ function TeacherPage() {
         {/* Header */}
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary">
-              선생님 대시보드
-            </p>
-            <h1 className="mt-2 text-3xl font-bold md:text-4xl">{school.name}</h1>
+            <div className="flex items-center gap-3">
+              <p className="text-xs font-semibold uppercase tracking-widest text-primary">
+                선생님 대시보드
+              </p>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary"></span>
+                </span>
+                분석된 실제 학생 데이터 기반
+              </span>
+            </div>
+            <div className="mt-2 flex items-center gap-3">
+              {school.galleryId && (
+                <a
+                  href={`https://gall.dcinside.com/mini/board/lists?id=${school.galleryId}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-7 items-center justify-center rounded bg-[#3b4890] px-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#2b356a]"
+                  title={`${school.name} DC 갤러리 바로가기`}
+                >
+                  DC 갤러리 ↗
+                </a>
+              )}
+              <h1 className="text-3xl font-bold md:text-4xl">{school.name}</h1>
+            </div>
             <p className="mt-1 text-sm text-muted-foreground">
               {school.region} · 재학생 {school.students.toLocaleString()}명
             </p>
