@@ -1,4 +1,0 @@
-const tsrStartManifest = () => ({ routes: { __root__: { filePath: "C:/Users/seocheon/Desktop/coding/look-mvp/src/routes/__root.tsx", children: ["/", "/student", "/teacher"], preloads: ["/assets/index-BHDy3Y2O.js"], scripts: [{ attrs: { type: "module", async: true, src: "/assets/index-BHDy3Y2O.js" } }] }, "/": { filePath: "C:/Users/seocheon/Desktop/coding/look-mvp/src/routes/index.tsx", children: void 0, preloads: ["/assets/index-BNfwJutt.js", "/assets/lookData-I76q48Lp.js"] }, "/student": { filePath: "C:/Users/seocheon/Desktop/coding/look-mvp/src/routes/student.tsx", children: void 0, preloads: ["/assets/student-CuLrdq2w.js", "/assets/SiteNav-DGDNOBXR.js", "/assets/lookData-I76q48Lp.js"] }, "/teacher": { filePath: "C:/Users/seocheon/Desktop/coding/look-mvp/src/routes/teacher.tsx", children: void 0, preloads: ["/assets/teacher-QYctjgNl.js", "/assets/SiteNav-DGDNOBXR.js", "/assets/lookData-I76q48Lp.js"] } } });
-export {
-  tsrStartManifest
-};

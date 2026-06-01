@@ -1,8 +1,10 @@
 const SCHOOLS = [
-  { id: "hansol-ms", name: "한솔중학교", region: "서울 성북구", students: 612 },
-  { id: "miraero-hs", name: "미래로고등학교", region: "경기 수원시", students: 894 },
-  { id: "saebyeok-ms", name: "새벽중학교", region: "부산 해운대구", students: 478 },
-  { id: "nuri-es", name: "누리초등학교", region: "대전 유성구", students: 520 }
+  { id: "cheongseok-hs", name: "청석고등학교", region: "충북 청주시", students: 780, galleryId: "cheongbbak" },
+  { id: "hakseong-hs", name: "학성고등학교", region: "울산 남구", students: 850, galleryId: "hshs" },
+  { id: "dimigo", name: "디미고", region: "경기 안산시", students: 600, galleryId: "dimigo" },
+  { id: "seil-hs", name: "세일고", region: "인천 부평구", students: 920, galleryId: "seilhs" },
+  { id: "daejeon-daeshin-hs", name: "대전대신고", region: "대전 서구", students: 730, galleryId: "daeshinhigh" },
+  { id: "jungsan-hs", name: "중산고등학교", region: "서울 강남구", students: 810, galleryId: "jungsanhigh" }
 ];
 const NATIONAL_STATS = [
   { value: "42.3%", label: "청소년 사이버폭력 경험률", desc: "10명 중 4명이 온라인 사이버 폭력 경험" },
@@ -16,7 +18,7 @@ const MOTIVE_DATA = [
   { motive: "재미", value: 17 }
 ];
 const CATEGORY_BY_SCHOOL = {
-  "hansol-ms": [
+  "cheongseok-hs": [
     { name: "남성", value: 25.9 },
     { name: "악플/욕설", value: 17.6 },
     { name: "여성/가족", value: 11.9 },
@@ -25,7 +27,7 @@ const CATEGORY_BY_SCHOOL = {
     { name: "지역", value: 7.3 },
     { name: "기타 혐오", value: 18.6 }
   ],
-  "miraero-hs": [
+  "hakseong-hs": [
     { name: "악플/욕설", value: 28.4 },
     { name: "남성", value: 19.2 },
     { name: "성소수자", value: 12.1 },
@@ -34,7 +36,7 @@ const CATEGORY_BY_SCHOOL = {
     { name: "지역", value: 6.2 },
     { name: "기타 혐오", value: 11.8 }
   ],
-  "saebyeok-ms": [
+  "dimigo": [
     { name: "지역", value: 22.5 },
     { name: "악플/욕설", value: 21 },
     { name: "남성", value: 18 },
@@ -43,60 +45,94 @@ const CATEGORY_BY_SCHOOL = {
     { name: "인종/국적", value: 7 },
     { name: "기타 혐오", value: 10 }
   ],
-  "nuri-es": [
+  "seil-hs": [
     { name: "악플/욕설", value: 34.2 },
     { name: "외모 비하", value: 18 },
     { name: "남성", value: 12.4 },
     { name: "여성/가족", value: 11 },
     { name: "장애", value: 5.4 },
     { name: "기타 혐오", value: 19 }
+  ],
+  "daejeon-daeshin-hs": [
+    { name: "성별 혐오", value: 31 },
+    { name: "악플/욕설", value: 24.5 },
+    { name: "외모 비하", value: 15.2 },
+    { name: "지역", value: 10.5 },
+    { name: "기타 혐오", value: 18.8 }
+  ],
+  "jungsan-hs": [
+    { name: "연령", value: 26.5 },
+    { name: "악플/욕설", value: 25.1 },
+    { name: "남성", value: 15.3 },
+    { name: "여성/가족", value: 14.2 },
+    { name: "기타 혐오", value: 18.9 }
   ]
 };
 const TOP_EXPRESSIONS = {
-  "hansol-ms": [
+  "cheongseok-hs": [
     { phrase: "ㅈㄴ 빻았네", category: "외모 비하", risk: "high", count: 142, context: "단체 채팅방에서 사진 공유 후 반응" },
     { phrase: "한남충", category: "성별 혐오", risk: "high", count: 118, context: "온라인 커뮤니티 댓글" },
     { phrase: "급식충", category: "연령 비하", risk: "mid", count: 96, context: "타학교 학생 지칭" },
     { phrase: "찐따", category: "관계 배제", risk: "mid", count: 88, context: "쉬는 시간 대화" },
     { phrase: "ㄹㅇ 토악질", category: "악플/욕설", risk: "mid", count: 71, context: "SNS 게시물 댓글" }
   ],
-  "miraero-hs": [
+  "hakseong-hs": [
     { phrase: "퐁퐁남", category: "성별 혐오", risk: "high", count: 165, context: "익명 게시판" },
     { phrase: "OO충", category: "악플/욕설", risk: "high", count: 134, context: "단체 채팅" },
     { phrase: "게이같다", category: "성소수자 혐오", risk: "high", count: 102, context: "농담 형태로 반복" },
     { phrase: "맘충", category: "여성/가족 혐오", risk: "mid", count: 78, context: "온라인 커뮤니티" }
   ],
-  "saebyeok-ms": [
+  "dimigo": [
     { phrase: "전라디언", category: "지역 혐오", risk: "high", count: 121, context: "지역 비하 밈 공유" },
     { phrase: "개찐따", category: "관계 배제", risk: "high", count: 99, context: "단체 채팅" },
     { phrase: "ㅈㄴ", category: "악플/욕설", risk: "mid", count: 187, context: "일상 대화에 빈번" }
   ],
-  "nuri-es": [
+  "seil-hs": [
     { phrase: "바보 멍청이", category: "악플/욕설", risk: "low", count: 210, context: "쉬는 시간 다툼" },
     { phrase: "뚱뚱이", category: "외모 비하", risk: "mid", count: 88, context: "체육 시간" },
     { phrase: "찐따", category: "관계 배제", risk: "mid", count: 64, context: "모둠 활동" }
+  ],
+  "daejeon-daeshin-hs": [
+    { phrase: "김치녀", category: "여성 혐오", risk: "high", count: 154, context: "온라인 커뮤니티" },
+    { phrase: "틀딱", category: "연령 비하", risk: "mid", count: 112, context: "선생님 지칭" },
+    { phrase: "병먹금", category: "악플/욕설", risk: "low", count: 89, context: "단톡방 대화" }
+  ],
+  "jungsan-hs": [
+    { phrase: "급식충", category: "연령 비하", risk: "mid", count: 175, context: "SNS 게시물 댓글" },
+    { phrase: "개오바", category: "악플/욕설", risk: "low", count: 140, context: "일상 대화" },
+    { phrase: "지잡대", category: "학벌 비하", risk: "high", count: 95, context: "성적 관련 대화" }
   ]
 };
 const PREVENTION_HISTORY = {
-  "hansol-ms": [
+  "cheongseok-hs": [
     { target: "학생", hours: 6, type: "영상 시청" },
     { target: "교사", hours: 3, type: "강의" },
     { target: "학부모", hours: 2, type: "가정통신문" }
   ],
-  "miraero-hs": [
+  "hakseong-hs": [
     { target: "학생", hours: 4, type: "영상 시청" },
     { target: "교사", hours: 2, type: "강의" },
     { target: "학부모", hours: 1, type: "가정통신문" }
   ],
-  "saebyeok-ms": [
+  "dimigo": [
     { target: "학생", hours: 6, type: "영상 + 토론" },
     { target: "교사", hours: 4, type: "워크숍" },
     { target: "학부모", hours: 2, type: "특강" }
   ],
-  "nuri-es": [
+  "seil-hs": [
     { target: "학생", hours: 8, type: "역할극" },
     { target: "교사", hours: 3, type: "강의" },
     { target: "학부모", hours: 2, type: "가정통신문" }
+  ],
+  "daejeon-daeshin-hs": [
+    { target: "학생", hours: 5, type: "영상 시청" },
+    { target: "교사", hours: 2, type: "강의" },
+    { target: "학부모", hours: 1, type: "가정통신문" }
+  ],
+  "jungsan-hs": [
+    { target: "학생", hours: 7, type: "토론" },
+    { target: "교사", hours: 4, type: "워크숍" },
+    { target: "학부모", hours: 2, type: "특강" }
   ]
 };
 const STUDENT_QUIZZES = [

@@ -1,6 +1,6 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
 import { S as SiteNav } from "./SiteNav-DGbDMogW.mjs";
-import { a as STUDENT_QUIZZES } from "./lookData-ZpA45Dh_.mjs";
+import { a as STUDENT_QUIZZES } from "./lookData-ZuqCrwjH.mjs";
 import "../_libs/tanstack__react-router.mjs";
 import "../_libs/tanstack__router-core.mjs";
 import "../_libs/tanstack__history.mjs";

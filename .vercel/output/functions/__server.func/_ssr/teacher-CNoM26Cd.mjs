@@ -1,6 +1,6 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
 import { S as SiteNav } from "./SiteNav-DGbDMogW.mjs";
-import { S as SCHOOLS, P as PREVENTION_HISTORY, C as CATEGORY_BY_SCHOOL, T as TOP_EXPRESSIONS } from "./lookData-ZpA45Dh_.mjs";
+import { S as SCHOOLS, P as PREVENTION_HISTORY, C as CATEGORY_BY_SCHOOL, T as TOP_EXPRESSIONS } from "./lookData-ZuqCrwjH.mjs";
 import { R as ResponsiveContainer, P as PieChart, a as Pie, C as Cell, T as Tooltip } from "../_libs/recharts.mjs";
 import "../_libs/tanstack__react-router.mjs";
 import "../_libs/tanstack__router-core.mjs";
@@ -201,8 +201,20 @@ function TeacherPage() {
     /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { className: "mx-auto max-w-6xl px-6 py-10", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-end justify-between gap-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold uppercase tracking-widest text-primary", children: "선생님 대시보드" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-2 text-3xl font-bold md:text-4xl", children: school.name }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold uppercase tracking-widest text-primary", children: "선생님 대시보드" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "relative flex h-1.5 w-1.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" })
+              ] }),
+              "분석된 실제 학생 데이터 기반"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 flex items-center gap-3", children: [
+            school.galleryId && /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: `https://gall.dcinside.com/mini/board/lists?id=${school.galleryId}`, target: "_blank", rel: "noreferrer", className: "inline-flex h-7 items-center justify-center rounded bg-[#3b4890] px-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#2b356a]", title: `${school.name} DC 갤러리 바로가기`, children: "DC 갤러리 ↗" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-3xl font-bold md:text-4xl", children: school.name })
+          ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1 text-sm text-muted-foreground", children: [
             school.region,
             " · 재학생 ",
