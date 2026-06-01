@@ -162,7 +162,7 @@ function TeacherPage() {
           </Card>
 
           <Card className="lg:col-span-3">
-            <Generator school={school.name} topCategory={categories[0].name} topPhrase={expressions[0]?.phrase ?? ""} />
+            <Generator school={school.name} topCategory={categories[0]?.name ?? "혐오 표현"} topPhrase={expressions[0]?.phrase ?? ""} />
           </Card>
         </div>
       </main>
