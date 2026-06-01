@@ -68,11 +68,13 @@ function TeacherPage() {
           </select>
         </div>
 
+        <UploadPanel schoolId={schoolId} schoolName={school.name} override={override} />
+
         {/* Top stats */}
         <div className="mt-8 grid gap-4 md:grid-cols-4">
           <StatCard label="수집된 표현" value={expressions.reduce((a, b) => a + b.count, 0).toLocaleString()} sub="비식별화 처리 완료" />
           <StatCard label="고위험 표현" value={expressions.filter((e) => e.risk === "high").length.toString()} sub="즉시 개입 권장" tone="danger" />
-          <StatCard label="주요 카테고리" value={categories[0].name} sub={`${categories[0].value}%`} />
+          <StatCard label="주요 카테고리" value={categories[0]?.name ?? "-"} sub={categories[0] ? `${categories[0].value}%` : "데이터 없음"} />
           <StatCard label="최근 예방교육" value={`${history[0]?.hours ?? 0}시간`} sub={history[0]?.type ?? "-"} />
         </div>
 
