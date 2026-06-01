@@ -1,13 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { SiteNav } from "@/components/SiteNav";
+import { SCHOOLS } from "@/lib/lookData";
 import {
-  SCHOOLS,
-  CATEGORY_BY_SCHOOL,
-  TOP_EXPRESSIONS,
-  PREVENTION_HISTORY,
-} from "@/lib/lookData";
+  clearSchoolOverride,
+  ingestCSV,
+  setSchoolOverride,
+  useSchoolData,
+} from "@/lib/lookStore";
 
 export const Route = createFileRoute("/teacher")({
   head: () => ({
@@ -38,9 +39,7 @@ const RISK_LABEL: Record<string, { text: string; cls: string }> = {
 function TeacherPage() {
   const [schoolId, setSchoolId] = useState(SCHOOLS[0].id);
   const school = SCHOOLS.find((s) => s.id === schoolId)!;
-  const categories = CATEGORY_BY_SCHOOL[schoolId];
-  const expressions = TOP_EXPRESSIONS[schoolId] ?? [];
-  const history = PREVENTION_HISTORY[schoolId] ?? [];
+  const { categories, expressions, history, override } = useSchoolData(schoolId);
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,11 +68,13 @@ function TeacherPage() {
           </select>
         </div>
 
+        <UploadPanel schoolId={schoolId} schoolName={school.name} override={override} />
+
         {/* Top stats */}
         <div className="mt-8 grid gap-4 md:grid-cols-4">
           <StatCard label="수집된 표현" value={expressions.reduce((a, b) => a + b.count, 0).toLocaleString()} sub="비식별화 처리 완료" />
           <StatCard label="고위험 표현" value={expressions.filter((e) => e.risk === "high").length.toString()} sub="즉시 개입 권장" tone="danger" />
-          <StatCard label="주요 카테고리" value={categories[0].name} sub={`${categories[0].value}%`} />
+          <StatCard label="주요 카테고리" value={categories[0]?.name ?? "-"} sub={categories[0] ? `${categories[0].value}%` : "데이터 없음"} />
           <StatCard label="최근 예방교육" value={`${history[0]?.hours ?? 0}시간`} sub={history[0]?.type ?? "-"} />
         </div>
 
@@ -161,7 +162,7 @@ function TeacherPage() {
           </Card>
 
           <Card className="lg:col-span-3">
-            <Generator school={school.name} topCategory={categories[0].name} topPhrase={expressions[0]?.phrase ?? ""} />
+            <Generator school={school.name} topCategory={categories[0]?.name ?? "혐오 표현"} topPhrase={expressions[0]?.phrase ?? ""} />
           </Card>
         </div>
       </main>
@@ -306,4 +307,89 @@ function buildLesson({ school, topCategory, topPhrase, grade, duration, activity
     ],
     activity: `모둠별로 우리 학교에서 자주 쓰이는 표현 5개를 적고, 그 중 ${topCategory} 카테고리에 해당하는 표현을 골라 ‘대체 표현 카드’를 만듭니다. 카드는 복도에 게시해 캠페인으로 확장합니다.`,
   };
+}
+
+function UploadPanel({ schoolId, schoolName, override }: { schoolId: string; schoolName: string; override: { updatedAt?: string; source?: string } }) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
+
+  const handleFile = async (file: File) => {
+    setMsg(null);
+    try {
+      const text = await file.text();
+      const result = ingestCSV(text);
+      if (result.kind === "unknown") {
+        setMsg({ kind: "err", text: result.error ?? "인식할 수 없는 CSV입니다." });
+        return;
+      }
+      const patch =
+        result.kind === "expressions"
+          ? { expressions: result.expressions, categories: result.categories, source: file.name }
+          : { history: result.history, source: file.name };
+      setSchoolOverride(schoolId, patch);
+      setMsg({
+        kind: "ok",
+        text:
+          result.kind === "expressions"
+            ? `표현 ${result.rowCount}건을 분석에 반영했습니다. (TOP ${result.expressions?.length ?? 0} · 카테고리 ${result.categories?.length ?? 0}종)`
+            : `예방교육 실적 ${result.rowCount}건을 반영했습니다.`,
+      });
+    } catch (e) {
+      setMsg({ kind: "err", text: e instanceof Error ? e.message : "파일을 읽지 못했습니다." });
+    } finally {
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
+  return (
+    <div className="mt-6 rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-5">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-widest text-primary">데이터 업로드</div>
+          <h3 className="mt-1 text-base font-bold">{schoolName} 분석 데이터 연결</h3>
+          <p className="mt-1 text-xs text-muted-foreground">
+            CSV (<code>phrase, category, risk, count, context</code>) 또는 학교알리미 예방교육 실적
+            (<code>대상, 시간, 유형</code>)을 업로드하면 즉시 차트·통계에 반영됩니다.
+          </p>
+          {override.updatedAt && (
+            <p className="mt-2 text-xs text-success">
+              ● 연결됨 · {override.source ?? "업로드"} · {new Date(override.updatedAt).toLocaleString("ko-KR")}
+            </p>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            ref={fileRef}
+            type="file"
+            accept=".csv,text/csv"
+            className="hidden"
+            onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
+          />
+          <button
+            onClick={() => fileRef.current?.click()}
+            className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+          >
+            CSV 업로드
+          </button>
+          {override.updatedAt && (
+            <button
+              onClick={() => { clearSchoolOverride(schoolId); setMsg(null); }}
+              className="rounded-xl border border-border bg-background px-4 py-2 text-sm font-medium hover:bg-muted"
+            >
+              초기화
+            </button>
+          )}
+        </div>
+      </div>
+      {msg && (
+        <div
+          className={`mt-3 rounded-lg px-3 py-2 text-xs ${
+            msg.kind === "ok" ? "bg-success/15 text-success" : "bg-destructive/10 text-destructive"
+          }`}
+        >
+          {msg.text}
+        </div>
+      )}
+    </div>
+  );
 }
