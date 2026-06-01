@@ -39,9 +39,7 @@ const RISK_LABEL: Record<string, { text: string; cls: string }> = {
 function TeacherPage() {
   const [schoolId, setSchoolId] = useState(SCHOOLS[0].id);
   const school = SCHOOLS.find((s) => s.id === schoolId)!;
-  const categories = CATEGORY_BY_SCHOOL[schoolId];
-  const expressions = TOP_EXPRESSIONS[schoolId] ?? [];
-  const history = PREVENTION_HISTORY[schoolId] ?? [];
+  const { categories, expressions, history, override } = useSchoolData(schoolId);
 
   return (
     <div className="min-h-screen bg-background">
