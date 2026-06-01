@@ -1,13 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { SiteNav } from "@/components/SiteNav";
+import { SCHOOLS } from "@/lib/lookData";
 import {
-  SCHOOLS,
-  CATEGORY_BY_SCHOOL,
-  TOP_EXPRESSIONS,
-  PREVENTION_HISTORY,
-} from "@/lib/lookData";
+  clearSchoolOverride,
+  ingestCSV,
+  setSchoolOverride,
+  useSchoolData,
+} from "@/lib/lookStore";
 
 export const Route = createFileRoute("/teacher")({
   head: () => ({
